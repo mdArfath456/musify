@@ -1,0 +1,44 @@
+.music-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  text-align: left;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px var(--space-4);
+  color: var(--color-text);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.music-card:hover {
+  border-color: var(--color-accent);
+}
+
+.music-card.active {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+}
+
+.music-card-index {
+  font-family: var(--font-mono);
+  color: var(--color-text-faint);
+  font-size: 13px;
+  width: 22px;
+  flex-shrink: 0;
+}
+
+.music-card.active .music-card-index {
+  color: var(--color-accent);
+}
+
+.music-card-title {
+  font-weight: 700;
+  font-size: 14.5px;
+}
+
+.music-card-artist {
+  font-size: 12.5px;
+  margin-top: 2px;
+}
