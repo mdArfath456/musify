@@ -1,4 +1,5 @@
 import { createContext, useContext, useRef, useState, useCallback, useEffect } from "react";
+import { recordPlay } from "../api/music.api";
 
 const PlayerContext = createContext(null);
 const STORAGE_KEY = "musify.player";
@@ -89,6 +90,9 @@ export function PlayerProvider({ children }) {
     audio.src = nextTrack.uri;
     audio.play();
     setIsPlaying(true);
+    // Fire-and-forget: updates play count + recently-played on the backend.
+    // Never blocks playback and a failure here shouldn't surface to the listener.
+    recordPlay(nextTrack._id).catch(() => { });
   }, []);
 
   const togglePlay = useCallback(() => {

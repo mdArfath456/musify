@@ -59,6 +59,12 @@ export default function Sidebar() {
           <NavLink to="/albums" className={linkClass}>
             Albums
           </NavLink>
+          <NavLink to="/liked" className={linkClass}>
+            Liked Songs
+          </NavLink>
+          <NavLink to="/recent" className={linkClass}>
+            Recently Played
+          </NavLink>
 
           {user?.role === "artist" && (
             <>

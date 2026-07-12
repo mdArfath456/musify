@@ -10,6 +10,9 @@ import Library from "./pages/Library/Library";
 import Albums from "./pages/Albums/Albums";
 import AlbumDetail from "./pages/AlbumDetail/AlbumDetail";
 import Studio from "./pages/Studio/Studio";
+import LikedSongs from "./pages/LikedSongs/LikedSongs";
+import RecentlyPlayed from "./pages/RecentlyPlayed/RecentlyPlayed";
+import ArtistProfile from "./pages/ArtistProfile/ArtistProfile";
 import NotFound from "./pages/NotFound/NotFound";
 
 function AppShell({ children }) {
@@ -66,6 +69,36 @@ export default function App() {
           <ProtectedRoute role="artist">
             <AppShell>
               <Studio />
+            </AppShell>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/liked"
+        element={
+          <ProtectedRoute>
+            <AppShell>
+              <LikedSongs />
+            </AppShell>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/recent"
+        element={
+          <ProtectedRoute>
+            <AppShell>
+              <RecentlyPlayed />
+            </AppShell>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/artists/:artistId"
+        element={
+          <ProtectedRoute>
+            <AppShell>
+              <ArtistProfile />
             </AppShell>
           </ProtectedRoute>
         }

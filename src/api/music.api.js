@@ -17,6 +17,31 @@ export async function getAlbumById(albumId) {
   return data.album;
 }
 
+export async function getLikedTracks() {
+  const { data } = await api.get("/music/liked");
+  return data.musics || [];
+}
+
+export async function toggleLikeTrack(trackId) {
+  const { data } = await api.post(`/music/${trackId}/like`);
+  return data; // { message, liked }
+}
+
+export async function getRecentlyPlayed() {
+  const { data } = await api.get("/music/recent");
+  return data.recentlyPlayed || [];
+}
+
+export async function recordPlay(trackId) {
+  const { data } = await api.post(`/music/${trackId}/play`);
+  return data; // { message, playCount }
+}
+
+export async function getArtistProfile(artistId) {
+  const { data } = await api.get(`/music/artist/${artistId}`);
+  return data; // { artist, musics, albums }
+}
+
 // --- Artist-role endpoints (require role "artist") ---
 
 export async function uploadMusic({ title, file }) {
