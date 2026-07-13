@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import MusicCard from "../../components/MusicCard/MusicCard";
+import SearchInput from "../../components/SearchInput/SearchInput";
 import Loader from "../../components/Loader/Loader";
 import EmptyState from "../../components/EmptyState/EmptyState";
 import { getAllMusics } from "../../api/music.api";
@@ -34,8 +35,7 @@ export default function Library() {
     if (!q) return tracks;
     return tracks.filter(
       (t) =>
-        t.title.toLowerCase().includes(q) ||
-        (t.artist?.username || "").toLowerCase().includes(q)
+        t.title.toLowerCase().includes(q) || (t.artist?.username || "").toLowerCase().includes(q)
     );
   }, [tracks, query]);
 
@@ -45,13 +45,8 @@ export default function Library() {
 
       <div className="page-body">
         {!loading && !error && tracks.length > 0 && (
-          <div className="search-bar">
-            <input
-              type="text"
-              placeholder="Search by track or artist..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
+          <div className="library-search">
+            <SearchInput value={query} onChange={setQuery} placeholder="Search by track or artist..." />
           </div>
         )}
 

@@ -63,3 +63,9 @@ export async function addMusicToAlbum({ albumId, musicId }) {
   const { data } = await api.post(`/music/album/${albumId}/add-music`, { musicId });
   return data.album;
 }
+
+
+export async function getMyTracks() {
+  const { data } = await api.get("/music/mine");
+  return data.musics || [];
+}

@@ -1,15 +1,44 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
-import { uploadMusic, createAlbum, addMusicToAlbum } from "../../api/music.api";
+import SearchInput from "../../components/SearchInput/SearchInput";
+import { uploadMusic, createAlbum, addMusicToAlbum, getMyTracks } from "../../api/music.api";
 import "./Studio.css";
 
 export default function Studio() {
+  // --- Your tracks (full catalog, not just this session) ---
+  const [myTracks, setMyTracks] = useState([]);
+  const [tracksLoading, setTracksLoading] = useState(true);
+  const [tracksError, setTracksError] = useState("");
+  const [trackQuery, setTrackQuery] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    getMyTracks()
+      .then((data) => {
+        if (!cancelled) setMyTracks(data);
+      })
+      .catch((err) => {
+        if (!cancelled) setTracksError(err.message || "Could not load your tracks.");
+      })
+      .finally(() => {
+        if (!cancelled) setTracksLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const filteredTracks = useMemo(() => {
+    const q = trackQuery.trim().toLowerCase();
+    if (!q) return myTracks;
+    return myTracks.filter((t) => t.title.toLowerCase().includes(q));
+  }, [myTracks, trackQuery]);
+
   // --- Upload track ---
   const [title, setTitle] = useState("");
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
-  const [sessionTracks, setSessionTracks] = useState([]); // tracks uploaded this session
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -18,7 +47,7 @@ export default function Studio() {
     setUploading(true);
     try {
       const music = await uploadMusic({ title, file });
-      setSessionTracks((prev) => [music, ...prev]);
+      setMyTracks((prev) => [music, ...prev]);
       setTitle("");
       setFile(null);
       e.target.reset();
@@ -113,31 +142,40 @@ export default function Studio() {
 
         <section className="studio-panel">
           <h2 className="studio-panel-title">Build an album</h2>
-          <p className="studio-panel-hint">
-            Pick from tracks you've uploaded this session. (Musify's API doesn't expose a "my tracks" list for
-            artists, so pick from what you just uploaded, or add older tracks by ID below.)
-          </p>
+          <p className="studio-panel-hint">Search your uploads and pick which tracks belong on the album.</p>
           <form className="studio-form" onSubmit={handleCreateAlbum}>
             <div className="field">
               <label htmlFor="album-title">Album title</label>
               <input id="album-title" value={albumTitle} onChange={(e) => setAlbumTitle(e.target.value)} required />
             </div>
 
-            {sessionTracks.length === 0 ? (
+            {tracksLoading && <p className="studio-empty-hint">Loading your tracks…</p>}
+            {!tracksLoading && tracksError && <p className="error-text">{tracksError}</p>}
+
+            {!tracksLoading && !tracksError && myTracks.length === 0 && (
               <p className="studio-empty-hint">Upload a track above to see it appear here.</p>
-            ) : (
-              <div className="studio-track-picker">
-                {sessionTracks.map((t) => (
-                  <label key={t._id} className="studio-track-option">
-                    <input
-                      type="checkbox"
-                      checked={selectedTrackIds.includes(t._id)}
-                      onChange={() => toggleTrack(t._id)}
-                    />
-                    <span>{t.title}</span>
-                  </label>
-                ))}
-              </div>
+            )}
+
+            {!tracksLoading && !tracksError && myTracks.length > 0 && (
+              <>
+                <SearchInput value={trackQuery} onChange={setTrackQuery} placeholder="Search your tracks..." />
+                {filteredTracks.length === 0 ? (
+                  <p className="studio-empty-hint">{`Nothing matches "${trackQuery}".`}</p>
+                ) : (
+                  <div className="studio-track-picker">
+                    {filteredTracks.map((t) => (
+                      <label key={t._id} className="studio-track-option">
+                        <input
+                          type="checkbox"
+                          checked={selectedTrackIds.includes(t._id)}
+                          onChange={() => toggleTrack(t._id)}
+                        />
+                        <span>{t.title}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
 
             {albumError && <p className="error-text">{albumError}</p>}
@@ -151,7 +189,7 @@ export default function Studio() {
         <section className="studio-panel">
           <h2 className="studio-panel-title">Add a track to an album</h2>
           <p className="studio-panel-hint">
-            Useful for tracks uploaded in a previous session. Copy the album ID from its detail page URL.
+            Useful for adding a track to an album that already exists. Copy the album ID from its detail page URL.
           </p>
           <form className="studio-form" onSubmit={handleAddToAlbum}>
             <div className="field">
