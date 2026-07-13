@@ -15,6 +15,7 @@ import RecentlyPlayed from "./pages/RecentlyPlayed/RecentlyPlayed";
 import ArtistProfile from "./pages/ArtistProfile/ArtistProfile";
 import NotFound from "./pages/NotFound/NotFound";
 import AIAssistant from "./pages/AIAssistant/AIAssistant";
+import OnlineSearch from "./pages/OnlineSearch/OnlineSearch";
 
 function AppShell({ children }) {
   return (
@@ -110,6 +111,16 @@ export default function App() {
           <ProtectedRoute>
             <AppShell>
               <AIAssistant />
+            </AppShell>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/online"
+        element={
+          <ProtectedRoute>
+            <AppShell>
+              <OnlineSearch />
             </AppShell>
           </ProtectedRoute>
         }

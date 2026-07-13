@@ -68,6 +68,9 @@ export default function Sidebar() {
           <NavLink to="/ai" className={linkClass}>
             AI Assistant
           </NavLink>
+          <NavLink to="/online" className={linkClass}>
+            Online Search
+          </NavLink>
 
           {user?.role === "artist" && (
             <>
