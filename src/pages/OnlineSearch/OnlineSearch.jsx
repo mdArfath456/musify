@@ -16,7 +16,7 @@ function formatTime(seconds) {
 export default function OnlineSearch() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
-  const [nowPlaying, setNowPlaying] = useState(null); // { videoId, title, channelTitle }
+  const [nowPlaying, setNowPlaying] = useState(null); // { videoId, title, channelTitle, thumbnail }
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [searched, setSearched] = useState(false);
@@ -55,7 +55,7 @@ export default function OnlineSearch() {
 
   return (
     <div className="page">
-      <Navbar title="Online Search" subtitle="Search and play songs from YouTube, right here." />
+      <Navbar title="Online Search" subtitle="Search and play songs, no video, just the music." />
 
       <div className="page-body">
         <form className="online-search-form" onSubmit={handleSubmit}>
@@ -70,27 +70,26 @@ export default function OnlineSearch() {
           </button>
         </form>
 
-        {/* The actual YouTube player mounts into this div — kept small since
-            audio is the point, not video, but still visible for ToS-compliant playback. */}
-        <div className={`online-player ${nowPlaying ? "" : "online-player-hidden"}`}>
-          <div id="yt-player-container" />
-        </div>
+        {/* The real YouTube player still mounts here for licensed playback,
+            but it's pushed off-screen — audio plays, no video is ever shown. */}
+        <div id="yt-player-container" className="yt-player-offscreen" />
 
         {nowPlaying && (
           <div className="online-now-playing">
-            <div>
+            <img className="online-now-playing-art" src={nowPlaying.thumbnail} alt="" />
+            <div className="online-now-playing-info">
               <p className="online-now-playing-title">{nowPlaying.title}</p>
               <p className="online-now-playing-channel">{nowPlaying.channelTitle}</p>
-            </div>
-            <div className="online-now-playing-controls">
-              <button className="btn btn-ghost" onClick={togglePlay} disabled={!isReady}>
-                {isPlaying ? "Pause" : "Play"}
-              </button>
-              <span className="online-now-playing-time">{formatTime(currentTime)}</span>
-              <div className="online-scrub" onClick={handleScrub}>
-                <div className="online-scrub-fill" style={{ width: `${pct}%` }} />
+              <div className="online-now-playing-controls">
+                <button className="btn btn-ghost" onClick={togglePlay} disabled={!isReady}>
+                  {isPlaying ? "Pause" : "Play"}
+                </button>
+                <span className="online-now-playing-time">{formatTime(currentTime)}</span>
+                <div className="online-scrub" onClick={handleScrub}>
+                  <div className="online-scrub-fill" style={{ width: `${pct}%` }} />
+                </div>
+                <span className="online-now-playing-time">{formatTime(duration)}</span>
               </div>
-              <span className="online-now-playing-time">{formatTime(duration)}</span>
             </div>
           </div>
         )}
