@@ -28,6 +28,15 @@ export default function MusicCard({ track, index, queue }) {
           )}
         </div>
       </button>
+      <Link
+        to={`/ai?similarTo=${track._id}&title=${encodeURIComponent(track.title)}`}
+        className="music-card-similar"
+        aria-label={`Find songs similar to ${track.title}`}
+        title="Find similar songs"
+        onClick={(e) => e.stopPropagation()}
+      >
+        ✦
+      </Link>
       <button
         className={`music-card-like ${liked ? "liked" : ""}`}
         aria-label={liked ? "Unlike this track" : "Like this track"}

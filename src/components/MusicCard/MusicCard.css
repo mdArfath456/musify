@@ -91,3 +91,20 @@
 .music-card-like.liked {
   color: var(--color-danger);
 }
+
+.music-card-similar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--color-text-faint);
+  padding: var(--space-3) var(--space-2);
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.music-card-similar:hover {
+  color: var(--color-accent);
+  transform: scale(1.15);
+}

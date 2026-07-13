@@ -14,6 +14,7 @@ import LikedSongs from "./pages/LikedSongs/LikedSongs";
 import RecentlyPlayed from "./pages/RecentlyPlayed/RecentlyPlayed";
 import ArtistProfile from "./pages/ArtistProfile/ArtistProfile";
 import NotFound from "./pages/NotFound/NotFound";
+import AIAssistant from "./pages/AIAssistant/AIAssistant";
 
 function AppShell({ children }) {
   return (
@@ -99,6 +100,16 @@ export default function App() {
           <ProtectedRoute>
             <AppShell>
               <ArtistProfile />
+            </AppShell>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ai"
+        element={
+          <ProtectedRoute>
+            <AppShell>
+              <AIAssistant />
             </AppShell>
           </ProtectedRoute>
         }

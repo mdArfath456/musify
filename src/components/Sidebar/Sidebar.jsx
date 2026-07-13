@@ -65,6 +65,9 @@ export default function Sidebar() {
           <NavLink to="/recent" className={linkClass}>
             Recently Played
           </NavLink>
+          <NavLink to="/ai" className={linkClass}>
+            AI Assistant
+          </NavLink>
 
           {user?.role === "artist" && (
             <>
