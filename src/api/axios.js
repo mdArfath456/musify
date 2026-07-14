@@ -9,7 +9,8 @@ const AUTH_FAILURE_MESSAGES = ["Unauthorized", "You don't have any access"];
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
-  withCredentials: true, // required so the JWT cookie is sent/received
+  withCredentials: true,
+  timeout: 20000,
 });
 
 let onAuthFailure = null;
