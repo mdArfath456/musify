@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
-import { loginUser, registerUser, logoutUser } from "../api/auth.api";
+import { loginUser, registerUser, verifyOtp, logoutUser } from "../api/auth.api";
 import { registerAuthFailureHandler } from "../api/axios";
 
 const STORAGE_KEY = "musify.user";
@@ -7,14 +7,9 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    // The backend has no "/me" endpoint and the JWT lives in a cookie we
-    // can't read from JS, so we mirror the last-known profile in
-    // localStorage purely to restore the UI shell after a refresh. The
-    // cookie (or its absence) is still what the backend actually checks.
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : null;
   });
-  const [authError, setAuthError] = useState("");
 
   const persist = (nextUser) => {
     setUser(nextUser);
@@ -26,24 +21,24 @@ export function AuthProvider({ children }) {
     registerAuthFailureHandler(() => persist(null));
   }, []);
 
-  const login = useCallback(async ({ identifier, password }) => {
-    setAuthError("");
-    const data = await loginUser({ identifier, password });
-    if (!data.user) {
-      setAuthError(data.message || "Invalid credentials");
-      throw new Error(data.message || "Invalid credentials");
-    }
+  const login = useCallback(async ({ identifier, password, rememberMe }) => {
+    const data = await loginUser({ identifier, password, rememberMe });
     persist(data.user);
     return data.user;
   }, []);
 
+  // Registration no longer logs the user in directly — the account is
+  // unverified until the OTP step completes. Callers should route to the
+  // verify-otp page using the returned email.
   const register = useCallback(async (payload) => {
-    setAuthError("");
     const data = await registerUser(payload);
-    if (!data.user) {
-      setAuthError(data.message || "Could not create account");
-      throw new Error(data.message || "Could not create account");
-    }
+    return data; // { needsVerification: true, email }
+  }, []);
+
+  // Completes the OTP step and — on success — the backend also logs the
+  // person in (issues the session cookie), so we persist the user here too.
+  const completeVerification = useCallback(async ({ email, otp }) => {
+    const data = await verifyOtp({ email, otp });
     persist(data.user);
     return data.user;
   }, []);
@@ -57,7 +52,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, authError, login, register, logout }}>
+    <AuthContext.Provider value={{ user, login, register, completeVerification, logout }}>
       {children}
     </AuthContext.Provider>
   );

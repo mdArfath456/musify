@@ -16,6 +16,9 @@ import ArtistProfile from "./pages/ArtistProfile/ArtistProfile";
 import NotFound from "./pages/NotFound/NotFound";
 import AIAssistant from "./pages/AIAssistant/AIAssistant";
 import OnlineSearch from "./pages/OnlineSearch/OnlineSearch";
+import VerifyOtp from "./pages/VerifyOtp/VerifyOtp";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
 
 function AppShell({ children }) {
   return (
@@ -34,6 +37,9 @@ export default function App() {
     <Routes>
       <Route path="/login" element={user ? <Navigate to="/library" replace /> : <Login />} />
       <Route path="/register" element={user ? <Navigate to="/library" replace /> : <Register />} />
+      <Route path="/verify-otp" element={<VerifyOtp />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       <Route
         path="/library"
