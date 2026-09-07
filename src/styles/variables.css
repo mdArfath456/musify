@@ -1,0 +1,49 @@
+:root {
+  /* Palette — deep aubergine-charcoal room lit by one warm tape-reel lamp */
+  --color-bg: #15121b;
+  --color-surface: #1e1926;
+  --color-surface-raised: #292131;
+  --color-border: #3a304a;
+  --color-text: #f4eee3;
+  --color-text-muted: #a297b3;
+  --color-text-faint: #6f6480;
+  --color-accent: #e3a345;
+  --color-accent-hover: #f0b360;
+  --color-accent-soft: rgba(227, 163, 69, 0.14);
+  --color-danger: #e2604f;
+  --color-danger-soft: rgba(226, 96, 79, 0.14);
+  --color-success: #6fae8a;
+
+  /* Type */
+  --font-display: "Fraunces", "Iowan Old Style", serif;
+  --font-body: "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Rhythm */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.35);
+  --player-height: 92px;
+  --sidebar-width: 236px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
